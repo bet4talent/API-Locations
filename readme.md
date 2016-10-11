@@ -10,8 +10,7 @@ In process :D
 Made with <3
 
 
-##Credits
-#--
+#Credits
 ## Geonames database
 
 http://www.geonames.org/
