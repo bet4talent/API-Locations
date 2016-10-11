@@ -11,7 +11,9 @@
 |
 */
 
-$app->get('/', ['middleware' => 'auth', function (Request $request) {
+use App\Models\LocationModel;
+
+$app->get('/', function () use ($app) {
     $response = array(
         'status' => 'error',
         'message' => ''
@@ -19,9 +21,52 @@ $app->get('/', ['middleware' => 'auth', function (Request $request) {
 
     $response['status'] = 'success';
 
-    return json_encode($response);
+    return response()->json($response);
+});
+
+$app->get('/unauthorized', ['as' => 'unauthorized', function () {
+    $response = array(
+        'status' => 'error',
+        'message' => ''
+    );
+
+    $response['message'] = 'Access unauthorized';
+
+    return response()->json($response, 401);
 }]);
 
-//function () use ($app) {
-//
-//});
+
+$app->get('/country/get[/{idOrName}]', function ($idOrName = null) {
+
+    $response = array(
+        'status'    => 'error',
+        'message'   => '',
+        'data'      => null
+    );
+
+    try {
+        $LocationModel = new LocationModel(app('db'));
+        if($idOrName) {
+            if(is_numeric($idOrName)) {
+                $idCountry = $idOrName;
+
+                $country = $LocationModel->getCountryById($idCountry);
+                $countries = $country;
+            } else {
+                $countryName = $idOrName;
+
+                $countries = $LocationModel->getCountriesByName($countryName);
+            }
+        } else {
+            $countries = $LocationModel->getAllCountries();
+        }
+
+        $response['status'] = 'success';
+        $response['data']   = $countries;
+    } catch (Exception $e) {
+        $response['status']     = 'error';
+        $response['message']    = $e->getMessage();
+    }
+
+    return response()->json($response);
+});
