@@ -70,3 +70,36 @@ $app->get('/country/get[/{idOrName}]', function ($idOrName = null) {
 
     return response()->json($response);
 });
+
+$app->get('/city/get/{idOrName}', function ($idOrName = null) {
+
+    $response = array(
+        'status'    => 'error',
+        'message'   => '',
+        'data'      => null
+    );
+
+    try {
+        $LocationModel = new LocationModel(app('db'));
+
+        if(is_numeric($idOrName)) {
+            $idCity = $idOrName;
+
+            $city   = $LocationModel->getCityById($idCity);
+            $cities = $city;
+        } else {
+            $cityName = $idOrName;
+            $cityName = str_replace('_', ' ', $cityName);
+
+            $cities = $LocationModel->getCitiesByName($cityName);
+        }
+
+        $response['status'] = 'success';
+        $response['data']   = $cities;
+    } catch (Exception $e) {
+        $response['status']     = 'error';
+        $response['message']    = $e->getMessage();
+    }
+
+    return response()->json($response);
+});
