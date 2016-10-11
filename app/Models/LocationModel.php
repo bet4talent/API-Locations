@@ -11,6 +11,19 @@ class LocationModel {
         $this->DB = $DB;
     }
 
+    public function getAllCountries() {
+        $countries = $this->DB->select(
+            '
+                SELECT
+                    *
+                FROM country
+                ORDER BY country ASC
+            '
+        );
+
+        return $countries;
+    }
+
     public function getCountryById($idCountry) {
         $countries = $this->DB->select(
             '
@@ -48,24 +61,63 @@ class LocationModel {
             )
         );
 
-        var_dump($countries);
-        die;
-
         return $countries;
     }
 
-    public function getAllCountries() {
+    public function getCityById($idCity) {
         $countries = $this->DB->select(
-<<<SQL
-            SELECT
-                *
-            FROM country
-            ORDER BY country ASC
-        
-SQL
+            '
+                SELECT
+                    *
+                FROM city
+                WHERE
+                    geonameid = ?
+            ',
+            array(
+                $idCity
+            )
         );
 
-        return $countries;
+        list($country) = $countries;
+
+        return $country;
     }
+
+    public function getCitiesByName($name) {
+
+        $cities = $this->DB->select(
+            '
+                SELECT
+                    city.geonameid,
+                    city.name,
+                    country.country,
+                    city.population
+                FROM
+                    bet4talent_location.city city
+                    INNER JOIN bet4talent_location.country country
+                        ON city.country_code = country.ISO
+                WHERE
+                    (
+                        city.name LIKE ?
+                        OR city.alternatenames LIKE ?
+                    )                      
+                    AND (
+                        city.feature_code = "PPLC"
+                        OR city.feature_code = "PPLA"
+                        OR city.feature_code = "PPLA2"
+                        OR city.feature_code = "PPLA3"
+                        OR city.feature_code = "PPL"
+                    )
+                    ORDER BY city.population DESC
+            ',
+            array(
+                "%". $name . "%",
+                "%". $name . "%"
+            )
+        );
+
+        return $cities;
+    }
+
 
 }
