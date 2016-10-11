@@ -6,8 +6,15 @@ This project is made as an easy way to fetch cities and countries through an API
 
 In process :D
 
+#
+Made with <3
+
+
+##Credits
 #--
-Made with <3 and Lumen Framework
+## Geonames database
+
+http://www.geonames.org/
 
 # Lumen Framwork
 
