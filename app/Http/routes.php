@@ -11,6 +11,8 @@
 |
 */
 
+use App\Models\LocationModel;
+
 $app->get('/', function () use ($app) {
     $response = array(
         'status' => 'error',
@@ -32,3 +34,39 @@ $app->get('/unauthorized', ['as' => 'unauthorized', function () {
 
     return response()->json($response, 401);
 }]);
+
+
+$app->get('/country/get[/{idOrName}]', function ($idOrName = null) {
+
+    $response = array(
+        'status'    => 'error',
+        'message'   => '',
+        'data'      => null
+    );
+
+    try {
+        $LocationModel = new LocationModel(app('db'));
+        if($idOrName) {
+            if(is_numeric($idOrName)) {
+                $idCountry = $idOrName;
+
+                $country = $LocationModel->getCountryById($idCountry);
+                $countries = $country;
+            } else {
+                $countryName = $idOrName;
+
+                $countries = $LocationModel->getCountriesByName($countryName);
+            }
+        } else {
+            $countries = $LocationModel->getAllCountries();
+        }
+
+        $response['status'] = 'success';
+        $response['data']   = $countries;
+    } catch (Exception $e) {
+        $response['status']     = 'error';
+        $response['message']    = $e->getMessage();
+    }
+
+    return response()->json($response);
+});
