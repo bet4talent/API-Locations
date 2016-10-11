@@ -11,7 +11,7 @@
 |
 */
 
-$app->get('/', ['middleware' => 'auth', function (Request $request) {
+$app->get('/', function () use ($app) {
     $response = array(
         'status' => 'error',
         'message' => ''
@@ -19,9 +19,16 @@ $app->get('/', ['middleware' => 'auth', function (Request $request) {
 
     $response['status'] = 'success';
 
-    return json_encode($response);
-}]);
+    return response()->json($response);
+});
 
-//function () use ($app) {
-//
-//});
+$app->get('/unauthorized', ['as' => 'unauthorized', function () {
+    $response = array(
+        'status' => 'error',
+        'message' => ''
+    );
+
+    $response['message'] = 'Access unauthorized';
+
+    return response()->json($response, 401);
+}]);
