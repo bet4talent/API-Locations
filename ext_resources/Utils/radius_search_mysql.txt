@@ -1,0 +1,29 @@
+Radius search with mysql
+
+A little math will do the thing. First of all you
+need a
+search form. When the form is submitted you should begin with once again querying Google maps for the
+coordinates your user submitted in the search form. This step is easy, since it is the same as above (and this
+time you should really consider using the accuracy Google gives you back!!!).
+Now that you have the coordinates of the searchers position, you query your database for any gas
+stations in
+the circumference of the given coordinates. I’ll do it within a range of ten kilometers, but this is of
+course at your choice (better: at your user’s choice). Let’s say you have a table called `stations`, with a primary
+key called `id` and the station’s `name`, additionaly the coordinates are saved in `latitude` and `longitude`. Here’s how you do your query:
+---------------------------------
+SELECT
+`id`,
+`name`,
+ACOS( SIN( RADIANS( `latitude` ) ) * SIN( RADIANS( $fLat ) ) + COS( RADIANS( `latitude` ) )
+* COS( RADIANS( $fLat )) * COS( RADIANS( `longitude` ) - RADIANS( $fLon )) ) * 6380 AS `distance`
+FROM `stations`
+WHERE
+ACOS( SIN( RADIANS( `latitude` ) ) * SIN( RADIANS( $fLat ) ) + COS( RADIANS( `latitude` ) )
+* COS( RADIANS( $fLat )) * COS( RADIANS( `longitude` ) - RADIANS( $fLon )) ) * 6380 < 10
+ORDER BY `distance`
+---------------------------------
+where $fLat is the searchers latitude and $fLon the searchers longitude. The ten in the where clause is
+the
+range you want to search within. Remember: This search is based on kilometers. If you want to search in
+miles, you need to change the 6380 (whoch is our earths radius) to its respective value in miles. That’s it!
+You now got your result set with all stations in the ambit of ten kilometers.
