@@ -24,7 +24,7 @@ class Access
         if($request->header('token') === env('API_TOKEN')) {
             return $next($request);
         } else {
-            if($request->server('PATH_INFO') === '/unauthorized') {
+            if($request->server('REQUEST_URI') === '/unauthorized') {
                 return $next($request);
             } else {
                 return redirect('/unauthorized');
