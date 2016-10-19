@@ -1,0 +1,8 @@
+Import geonames tables into MySQL:
+
+Example:
+LOAD DATA LOCAL INFILE '/home/didac/Downloads/alternateNames.txt' INTO TABLE alternate_name FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n';
+
+tables needed:
+city
+country

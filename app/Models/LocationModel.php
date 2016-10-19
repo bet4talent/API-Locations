@@ -90,8 +90,11 @@ class LocationModel {
                 SELECT
                     city.geonameid,
                     city.name,
-                    country.country,
-                    city.population
+                    city.latitude,
+                    city.longitude,
+                    city.population,
+                    city.timezone,
+                    country.country
                 FROM
                     bet4talent_location.city city
                     INNER JOIN bet4talent_location.country country
