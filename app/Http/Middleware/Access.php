@@ -21,7 +21,7 @@ class Access
      * @return mixed
      */
     public function handle($request, Closure $next) {
-        if($request->header('api_token') === env('API_TOKEN')) {
+        if($request->header('token') === env('API_TOKEN')) {
             return $next($request);
         } else {
             if($request->server('PATH_INFO') === '/unauthorized') {
