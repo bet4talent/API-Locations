@@ -84,6 +84,42 @@ class LocationModel {
     }
 
     public function getCitiesByName($name) {
+        $cities = $this->DB->select(
+            '
+                SELECT
+                    city.geonameid,
+                    city.name,
+                    city.latitude,
+                    city.longitude,
+                    city.population,
+                    city.timezone,
+                    country.country
+                FROM
+                    bet4talent_location.city city
+                    INNER JOIN bet4talent_location.country country
+                        ON city.country_code = country.ISO
+                WHERE
+                    (
+                        city.name LIKE ?
+                    )                      
+                    AND (
+                        city.feature_code = "PPLC"
+                        OR city.feature_code = "PPLA"
+                        OR city.feature_code = "PPLA2"
+                        OR city.feature_code = "PPLA3"
+                        OR city.feature_code = "PPL"
+                    )
+                    ORDER BY city.population DESC
+            ',
+            array(
+                "%". $name . "%"
+            )
+        );
+
+        return $cities;
+    }
+
+    public function getCitiesByAlternativeName($name) {
 
         $cities = $this->DB->select(
             '

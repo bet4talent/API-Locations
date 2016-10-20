@@ -71,6 +71,7 @@ $app->get('/country/get[/{idOrName}]', function ($idOrName = null) {
     return response()->json($response);
 });
 
+/* Search of name in alternative names and Id */
 $app->get('/city/get/{idOrName}', function ($idOrName = null) {
 
     $response = array(
@@ -91,8 +92,35 @@ $app->get('/city/get/{idOrName}', function ($idOrName = null) {
             $cityName = $idOrName;
             $cityName = str_replace('_', ' ', $cityName);
 
-            $cities = $LocationModel->getCitiesByName($cityName);
+            $cities = $LocationModel->getCitiesByAlternativeName($cityName);
         }
+
+        $response['status'] = 'success';
+        $response['data']   = $cities;
+    } catch (Exception $e) {
+        $response['status']     = 'error';
+        $response['message']    = $e->getMessage();
+    }
+
+    return response()->json($response);
+});
+
+/* Search for name in city names (NOT alternative names) */
+$app->get('/city/get-by-name/{cityName}', function ($cityName = null) {
+
+    $response = array(
+        'status'    => 'error',
+        'message'   => '',
+        'data'      => null
+    );
+
+    try {
+        $LocationModel = new LocationModel(app('db'));
+
+        $cityName = trim($cityName);
+        $cityName = str_replace('_', ' ', $cityName);
+
+        $cities = $LocationModel->getCitiesByName($cityName);
 
         $response['status'] = 'success';
         $response['data']   = $cities;
