@@ -112,7 +112,7 @@ class LocationModel {
                     ORDER BY city.population DESC
             ',
             array(
-                "%". $name . "%"
+                $name . "%"
             )
         );
 
@@ -150,8 +150,8 @@ class LocationModel {
                     ORDER BY city.population DESC
             ',
             array(
-                "%". $name . "%",
-                "%". $name . "%"
+                $name . "%",
+                $name . "%"
             )
         );
 
