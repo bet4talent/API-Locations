@@ -83,7 +83,13 @@ class LocationModel {
         return $country;
     }
 
-    public function getCitiesByName($name) {
+    public function getCitiesByName($name, $limit = 5) {
+
+        $limit_sql = '';
+        if($limit) {
+            $limit_sql = ' LIMIT '. $limit . ' ';
+        }
+
         $cities = $this->DB->select(
             '
                 SELECT
@@ -110,7 +116,7 @@ class LocationModel {
                         OR city.feature_code = "PPL"
                     )
                     ORDER BY city.population DESC
-                    LIMIT 5
+                    '. $limit_sql .'
             ',
             array(
                 $name . "%"
