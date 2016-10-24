@@ -110,6 +110,7 @@ class LocationModel {
                         OR city.feature_code = "PPL"
                     )
                     ORDER BY city.population DESC
+                    LIMIT 5
             ',
             array(
                 $name . "%"
