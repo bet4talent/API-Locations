@@ -90,7 +90,7 @@ $app->get('/city/get/{idOrName}', function ($idOrName = null) {
             $cities = $city;
         } else {
             $cityName = $idOrName;
-            $cityName = str_replace('_', ' ', $cityName);
+            $cityName = urldecode($cityName);
 
             $cities = $LocationModel->getCitiesByAlternativeName($cityName);
         }
@@ -118,7 +118,7 @@ $app->get('/city/get-by-name/{cityName}', function ($cityName = null) {
         $LocationModel = new LocationModel(app('db'));
 
         $cityName = trim($cityName);
-        $cityName = str_replace('_', ' ', $cityName);
+        $cityName = urldecode($cityName);
 
         $cities = $LocationModel->getCitiesByName($cityName);
 
