@@ -101,8 +101,8 @@ class LocationModel {
                     city.timezone,
                     country.country
                 FROM
-                    bet4talent_location.city city
-                    INNER JOIN bet4talent_location.country country
+                    city city
+                    INNER JOIN country country
                         ON city.country_code = country.ISO
                 WHERE
                     (
@@ -139,8 +139,8 @@ class LocationModel {
                     city.timezone,
                     country.country
                 FROM
-                    bet4talent_location.city city
-                    INNER JOIN bet4talent_location.country country
+                    city city
+                    INNER JOIN country country
                         ON city.country_code = country.ISO
                 WHERE
                     (
