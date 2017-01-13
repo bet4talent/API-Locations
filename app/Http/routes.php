@@ -72,7 +72,7 @@ $app->get('/country/get[/{idOrName}]', function ($idOrName = null) {
 });
 
 /* Search of name in alternative names and Id */
-$app->get('/city/get/{idOrName}', function ($idOrName = null) {
+$app->get('/city/get/{idOrName}[/{countryName}]', function ($idOrName = null, $countryName = null) {
 
     $response = array(
         'status'    => 'error',
@@ -92,7 +92,9 @@ $app->get('/city/get/{idOrName}', function ($idOrName = null) {
             $cityName = $idOrName;
             $cityName = urldecode($cityName);
 
-            $cities = $LocationModel->getCitiesByAlternativeName($cityName);
+            $countryName = urldecode($countryName);
+
+            $cities = $LocationModel->getCitiesByAlternativeName($cityName, $countryName);
         }
 
         $response['status'] = 'success';
