@@ -126,7 +126,27 @@ class LocationModel {
         return $cities;
     }
 
-    public function getCitiesByAlternativeName($name) {
+    public function getCitiesByAlternativeName($cityName, $countryName) {
+
+        $arrayParams = array(
+            "%" . $cityName . "%",
+            "%" . $cityName . "%"
+        );
+
+        $countryClause = '';
+        if($countryName) {
+
+            // Quick dirty hack to avoid not-needed complexities
+            if(strrpos($countryName, 'españa') !== false) {
+                $countryName = 'spain';
+            }
+
+            $countryClause = '
+                AND (country.country LIKE ?)
+            ';
+
+            $arrayParams[] = "%" . $countryName . "%";
+        }
 
         $cities = $this->DB->select(
             '
@@ -146,7 +166,8 @@ class LocationModel {
                     (
                         city.name LIKE ?
                         OR city.alternatenames LIKE ?
-                    )                      
+                    )
+                    '. $countryClause .'
                     AND (
                         city.feature_code = "PPLC"
                         OR city.feature_code = "PPLA"
@@ -156,10 +177,7 @@ class LocationModel {
                     )
                     ORDER BY city.population DESC
             ',
-            array(
-                $name . "%",
-                $name . "%"
-            )
+            $arrayParams
         );
 
         return $cities;
